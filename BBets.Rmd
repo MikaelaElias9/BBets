@@ -9,8 +9,143 @@ date: "2024-09-26"
 This assignment has three questions:  
 
 1. in a class of 35 students, Dr. J bets $1 against student's $1  that at least 2 students have the same birthday, month, day.
-Find the probability that atleast two student have the same birthday.  If 26 students in the class take the bet how much is Dr. J expected to win/lose.   How much should Dr. J wager against the student's $1 to make this a fair bet?
+Find the probability that at least two student have the same birthday.  If 26 students in the class take the bet how much is Dr. J expected to win/lose.   How much should Dr. J wager against the student's $1 to make this a fair bet?      
+
+The probability of 2 students having the same birthday is 0.8152. Dr.J is expected to win 16.3904. To make this a fair bet Dr.J would have to put in $4.41.
 
 2. Assume class size is 26 instead of 35.  With the same bet ($1 ot $1) what is the probability Dr. J wins the bet now.  If 20 of the 26 students make the bet, what is Dr. J's expected profit/loss?
 
+The probability that Dr.J wins the bet now is 0.6066. Dr.J expected profit is $4.264. 
+
 3. What size class (how many students) makes the $1 againt $1 a fair bet?
+
+To make the bet fair there would need to be 23 students. 
+
+
+```{r setup, include=FALSE}
+# Load necessary libraries
+library(ggplot2)
+```
+
+```{r}
+# Function to simulate the birthday problem
+simulate_birthday <- function(class_size = 35, trials = 100) {
+  results <- numeric(trials)
+  
+  for (i in 1:trials) {
+    birthdays <- sample(1:365, class_size, replace = TRUE) # Sample birthdays
+    has_duplicate <- any(duplicated(birthdays)) # Check for duplicates
+    results[i] <- ifelse(has_duplicate, 1, 0) # Store 1 if duplicate found, 0 otherwise
+  }
+  
+  # Calculate the probability of at least one duplicate
+  probability <- mean(results)
+  return(probability)
+}
+
+# Run the simulation 100 times
+set.seed(123) # Set seed for reproducibility
+probabilities <- replicate(100, simulate_birthday())
+
+# Print mean of probabilities
+mean_prob <- mean(probabilities)
+cat("Mean =", mean_prob, "\n")
+
+
+```
+
+```{r}
+# Plot histogram of probabilities
+ggplot(data.frame(probabilities), aes(x = probabilities)) +
+  geom_histogram(bins = 10, fill = "lightblue", color = "black") +
+  labs(title = "Histogram of Probabilities",
+       x = "Probability",
+       y = "Frequency") +
+  theme_minimal()
+
+
+```
+```{r}
+# Calculate 95% confidence interval
+ci <- quantile(probabilities, c(0.025, 0.975))
+cat("95% Confidence Interval: [", ci[1], ", ", ci[2], "]\n")
+
+
+```
+```{r}
+EV= mean_prob*26-(1-mean_prob)*26
+print(paste("ev=",EV))
+```
+
+```{r}
+print(paste('mean=',mean(probabilities)))
+```
+```{r}
+FAIR=(mean_prob)/(1-mean_prob)
+print(paste("fairbet=",FAIR))
+```
+#Question 2
+
+```{r}
+# Function to simulate the birthday problem
+simulate_birthday <- function(class_size = 26, trials = 100) {
+  results <- numeric(trials)
+  
+  for (i in 1:trials) {
+    birthdays <- sample(1:365, class_size, replace = TRUE) # Sample birthdays
+    has_duplicate <- any(duplicated(birthdays)) # Check for duplicates
+    results[i] <- ifelse(has_duplicate, 1, 0) # Store 1 if duplicate found, 0 otherwise
+  }
+  
+  # Calculate the probability of at least one duplicate
+  probability <- mean(results)
+  return(probability)
+}
+
+# Run the simulation 100 times
+set.seed(123) # Set seed for reproducibility
+probabilities <- replicate(100, simulate_birthday())
+
+# Print mean of probabilities
+mean_prob <- mean(probabilities)
+cat("Mean =", mean_prob, "\n")
+
+
+```
+```{r}
+EV= mean_prob*20-(1-mean_prob)*20
+print(paste("ev=",EV))
+```
+#Question 3
+
+```{r}
+# Function to simulate the birthday problem
+simulate_birthday <- function(class_size = 23, trials = 100) {
+  results <- numeric(trials)
+  
+  for (i in 1:trials) {
+    birthdays <- sample(1:365, class_size, replace = TRUE) # Sample birthdays
+    has_duplicate <- any(duplicated(birthdays)) # Check for duplicates
+    results[i] <- ifelse(has_duplicate, 1, 0) # Store 1 if duplicate found, 0 otherwise
+  }
+  
+  # Calculate the probability of at least one duplicate
+  probability <- mean(results)
+  return(probability)
+}
+
+# Run the simulation 100 times
+set.seed(123) # Set seed for reproducibility
+probabilities <- replicate(100, simulate_birthday())
+
+# Print mean of probabilities
+mean_prob <- mean(probabilities)
+cat("Mean =", mean_prob, "\n")
+
+
+```
+```{r}
+EV= mean_prob*20-(1-mean_prob)*20
+print(paste("ev=",EV))
+```
+
